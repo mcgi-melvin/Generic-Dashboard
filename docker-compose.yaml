@@ -1,0 +1,55 @@
+networks:
+  application:
+services:
+  client:
+    image: digizan/generic-dashboard-client
+    build:
+      context: Client
+      dockerfile: Dockerfile
+    container_name: generic-dashboard-client
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./Client:/var/www/html
+    networks:
+      - application
+  server:
+    image: digizan/generic-dashboard-server
+    build:
+      context: Server
+      dockerfile: Dockerfile
+    container_name: generic-dashboard-server
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./Server:/var/www/html
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=0.0.0.0
+    networks:
+      - application
+    entrypoint: ['/bin/sh', '-c']
+    command:
+      - |
+        composer install
+        php artisan migrate
+        php artisan serve
+  db:
+    image: postgres:15
+    container_name: generic-dashboard-db
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./.docker/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD="Asdqwe123!@#"
+      - POSTGRES_DB=generic_dashboard
+    networks:
+      - application
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U generic_dashboard"]
+      interval: 5s
+      timeout: 5s
+      retries: 5

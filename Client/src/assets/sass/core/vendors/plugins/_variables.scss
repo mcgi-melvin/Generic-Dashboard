@@ -1,0 +1,27 @@
+//
+// 3rd-party config
+//
+@use "sass:color";
+
+// Prismjs
+$prismjs-bg: #1e1e3f;
+
+$prismjs-border: rgba($white, 0.1);
+
+$prismjs-btn-bg: color.adjust($prismjs-bg, $lightness: 9%);
+$prismjs-btn-bg-hover: color.adjust($prismjs-bg, $lightness: 9%);
+
+$prismjs-btn-color: rgba($white, 0.75);
+$prismjs-btn-color-hover: $primary;
+
+$prismjs-scrollbar-color: color.adjust($prismjs-bg, $lightness: 12%);
+$prismjs-scrollbar-color-hover: color.adjust($prismjs-bg, $lightness: 15%);
+
+// Bootstrap Maxlength
+$bootstrap-maxlength-z-index: 1040;
+
+// Daterangepicker
+$daterangepicker-ranges-list-height: 260px;
+$daterangepicker-ranges-list-width: 150px;
+
+	

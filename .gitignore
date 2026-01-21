@@ -1,0 +1,8 @@
+.idea
+
+/Client/.env
+/Client/package-lock.json
+/Client/node_modules
+
+/Server/.env
+/Server/vendor
