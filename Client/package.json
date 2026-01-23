@@ -1,6 +1,6 @@
 {
-  "name": "Template Demo 3",
-  "version": "1.0",
+  "name": "Generic-Dashboard",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "vite",
@@ -62,7 +62,7 @@
     "@vitejs/plugin-vue": "^6.0.1",
     "@vue/eslint-config-prettier": "^7.0.0",
     "@vue/eslint-config-typescript": "^11.0.0",
-    "@vue/tsconfig": "^0.1.3",
+    "@vue/tsconfig": "^0.8.1",
     "array-sort": "^1.0.0",
     "eslint": "^8.22.0",
     "eslint-plugin-vue": "^9.3.0",

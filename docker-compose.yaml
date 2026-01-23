@@ -1,8 +1,26 @@
 networks:
   application:
 services:
+  nginx:
+    image: nginx:stable-alpine
+    container_name: generic-dashboard-nginx
+    ports:
+      - "8000:80"
+    links:
+      - server
+    volumes:
+      - ./Server:/var/www/html
+      - ./.docker/nginx/site.conf:/etc/nginx/conf.d/default.conf:rw
+      - ./.docker/logs/nginx:/var/logs/nginx:rw
+      - /var/www/html/storage
+      - /var/www/html/bootstrap/cache
+    depends_on:
+      - server
+      - db
+    networks:
+      - application
   client:
-    image: digizan/generic-dashboard-client
+    image: digizan/generic-dashboard-client:latest
     build:
       context: Client
       dockerfile: Dockerfile
@@ -10,46 +28,38 @@ services:
     ports:
       - "5173:5173"
     volumes:
-      - ./Client:/var/www/html
+      - ./Client:/app
+      - /app/node_modules
+    command: "npm run dev -- --host --port 5173"
     networks:
       - application
   server:
-    image: digizan/generic-dashboard-server
+    image: digizan/generic-dashboard-server:latest
     build:
       context: Server
       dockerfile: Dockerfile
     container_name: generic-dashboard-server
     ports:
-      - "8000:8000"
+      - "9001:9000"
     volumes:
       - ./Server:/var/www/html
-    depends_on:
-      - db
-    environment:
-      - DB_HOST=0.0.0.0
     networks:
       - application
-    entrypoint: ['/bin/sh', '-c']
-    command:
-      - |
-        composer install
-        php artisan migrate
-        php artisan serve
+    depends_on:
+      - db
   db:
-    image: postgres:15
+    image: postgres:18.1-alpine
     container_name: generic-dashboard-db
+    restart: unless-stopped
     ports:
       - "5432:5432"
     volumes:
-      - ./.docker/db:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=root
-      - POSTGRES_PASSWORD="Asdqwe123!@#"
+      - POSTGRES_PASSWORD=asdqwe123
       - POSTGRES_DB=generic_dashboard
     networks:
       - application
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U generic_dashboard"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+volumes:
+  postgres_data:

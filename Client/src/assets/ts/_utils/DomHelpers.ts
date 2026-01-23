@@ -200,6 +200,7 @@ function isElementHasClasses(
 ): boolean {
   const classes = classesStr.split(" ");
   for (let i = 0; i < classes.length; i++) {
+    // @ts-ignore
     if (!element.classList.contains(classes[i])) {
       return false;
     }
@@ -242,7 +243,7 @@ function getElementChildren(
     const child = element.childNodes[i];
     // child.nodeType == 1 => Element, Text, Comment, ProcessingInstruction, CDATASection, EntityReference
     if (
-      child.nodeType === 1 &&
+      child?.nodeType === 1 &&
       getElementMatches(child as HTMLElement, selector)
     ) {
       result.push(child as HTMLElement);
@@ -257,6 +258,7 @@ function getElementChild(
   selector: string
 ): HTMLElement | null {
   const children = getElementChildren(element, selector);
+  // @ts-ignore
   return children ? children[0] : null;
 }
 

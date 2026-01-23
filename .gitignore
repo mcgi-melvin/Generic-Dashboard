@@ -1,8 +1,11 @@
 .idea
 
+/.docker/logs
+
 /Client/.env
 /Client/package-lock.json
 /Client/node_modules
+/Client/dist
 
 /Server/.env
 /Server/vendor
