@@ -35,7 +35,7 @@
     <div
       class="d-flex flex-lg-row-fluid w-lg-50 bgi-size-cover bgi-position-center order-1 order-lg-2"
       :style="`background-image: url('${getAssetPath(
-        '/media/misc/auth-bg.png'
+        'media/misc/auth-bg.png'
       )}')`"
     >
       <!--begin::Content-->
@@ -46,8 +46,8 @@
         <router-link to="/" class="mb-0 mb-lg-12">
           <img
             alt="Logo"
-            :src="getAssetPath('media/logos/custom-1.png')"
-            class="h-60px h-lg-75px"
+            :src="getAssetPath('media/logos/favicon.png')"
+            class="h-100px h-lg-200px"
           />
         </router-link>
         <!--end::Logo-->

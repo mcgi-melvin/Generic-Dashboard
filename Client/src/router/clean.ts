@@ -34,7 +34,7 @@ const routes: Array<RouteRecordRaw> = [
         path: "/sign-in",
         name: "sign-in",
         component: () =>
-          import("@/views/crafted/authentication/basic-flow/SignIn.vue"),
+          import("@/views/auth/SignIn.vue"),
         meta: {
           pageTitle: "Sign In",
         },
@@ -43,7 +43,7 @@ const routes: Array<RouteRecordRaw> = [
         path: "/sign-up",
         name: "sign-up",
         component: () =>
-          import("@/views/crafted/authentication/basic-flow/SignUp.vue"),
+          import("@/views/auth/SignUp.vue"),
         meta: {
           pageTitle: "Sign Up",
         },
@@ -52,7 +52,7 @@ const routes: Array<RouteRecordRaw> = [
         path: "/password-reset",
         name: "password-reset",
         component: () =>
-          import("@/views/crafted/authentication/basic-flow/PasswordReset.vue"),
+          import("@/views/auth/PasswordReset.vue"),
         meta: {
           pageTitle: "Password reset",
         },

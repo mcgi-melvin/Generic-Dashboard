@@ -120,7 +120,7 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: "/crafted/account",
         name: "account",
-        component: () => import("@/views/crafted/account/Account.vue"),
+        component: () => import("@/views/account/Account.vue"),
         meta: {
           breadcrumbs: ["Crafted", "Account"],
         },
@@ -128,7 +128,7 @@ const routes: Array<RouteRecordRaw> = [
           {
             path: "overview",
             name: "account-overview",
-            component: () => import("@/views/crafted/account/Overview.vue"),
+            component: () => import("@/views/account/Overview.vue"),
             meta: {
               pageTitle: "Overview",
             },
@@ -136,7 +136,7 @@ const routes: Array<RouteRecordRaw> = [
           {
             path: "settings",
             name: "account-settings",
-            component: () => import("@/views/crafted/account/Settings.vue"),
+            component: () => import("@/views/account/Settings.vue"),
             meta: {
               pageTitle: "Settings",
             },
@@ -415,7 +415,7 @@ const routes: Array<RouteRecordRaw> = [
         path: "/sign-in",
         name: "sign-in",
         component: () =>
-          import("@/views/crafted/authentication/basic-flow/SignIn.vue"),
+          import("@/views/auth/SignIn.vue"),
         meta: {
           pageTitle: "Sign In",
         },
@@ -424,7 +424,7 @@ const routes: Array<RouteRecordRaw> = [
         path: "/sign-up",
         name: "sign-up",
         component: () =>
-          import("@/views/crafted/authentication/basic-flow/SignUp.vue"),
+          import("@/views/auth/SignUp.vue"),
         meta: {
           pageTitle: "Sign Up",
         },
@@ -433,7 +433,7 @@ const routes: Array<RouteRecordRaw> = [
         path: "/password-reset",
         name: "password-reset",
         component: () =>
-          import("@/views/crafted/authentication/basic-flow/PasswordReset.vue"),
+          import("@/views/auth/PasswordReset.vue"),
         meta: {
           pageTitle: "Password reset",
         },

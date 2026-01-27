@@ -1,34 +1,26 @@
 networks:
   application:
 services:
-  nginx:
-    image: nginx:stable-alpine
-    container_name: generic-dashboard-nginx
-    ports:
-      - "8000:80"
-    links:
-      - server
-    volumes:
-      - ./Server:/var/www/html
-      - ./.docker/nginx/site.conf:/etc/nginx/conf.d/default.conf:rw
-      - ./.docker/logs/nginx:/var/logs/nginx:rw
-      - /var/www/html/storage
-      - /var/www/html/bootstrap/cache
-    depends_on:
-      - server
-      - db
-    networks:
-      - application
   client:
     image: digizan/generic-dashboard-client:latest
     build:
       context: Client
       dockerfile: Dockerfile
     container_name: generic-dashboard-client
+    develop:
+      watch:
+        - path: ./Client
+          target: /app
+          ignore:
+            - node_modules/
+          action: sync
+        - path: ./Client/package.json
+          target: /app/package.json
+          action: rebuild
     ports:
       - "5173:5173"
     volumes:
-      - ./Client:/app
+      #- ./Client:/app
       - /app/node_modules
     command: "npm run dev -- --host --port 5173"
     networks:
@@ -39,10 +31,21 @@ services:
       context: Server
       dockerfile: Dockerfile
     container_name: generic-dashboard-server
+    develop:
+      watch:
+        - path: ./Server
+          target: /var/www/html
+          ignore:
+            - node_modules/
+          action: sync
+        - path: ./Server/package.json
+          target: /var/www/html/package.json
+          action: rebuild
+    restart: always
     ports:
-      - "9001:9000"
-    volumes:
-      - ./Server:/var/www/html
+      - "3000:3000"
+    #volumes:
+     # - ./Server:/var/www/html
     networks:
       - application
     depends_on:
@@ -54,10 +57,11 @@ services:
     ports:
       - "5432:5432"
     volumes:
+      - ./Server/database/migrations:/docker-entrypoint-initdb.d
       - postgres_data:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=asdqwe123
+      - POSTGRES_PASSWORD=Asdqwe123
       - POSTGRES_DB=generic_dashboard
     networks:
       - application

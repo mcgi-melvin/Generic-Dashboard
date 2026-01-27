@@ -16,11 +16,11 @@ export const useAuthStore = defineStore("auth", () => {
   const user = ref<User>({} as User);
   const isAuthenticated = ref(!!JwtService.getToken());
 
-  function setAuth(authUser: User) {
+  function setAuth(data) {
     isAuthenticated.value = true;
-    user.value = authUser;
+    user.value = data.user as User;
     errors.value = {};
-    JwtService.saveToken(user.value.api_token);
+    JwtService.saveToken(data.refreshToken);
   }
 
   function setError(error: any) {
@@ -34,49 +34,56 @@ export const useAuthStore = defineStore("auth", () => {
     JwtService.destroyToken();
   }
 
-  function login(credentials: User) {
-    return ApiService.post("login", credentials)
-      .then(({ data }) => {
-        setAuth(data);
-      })
-      .catch(({ response }) => {
-        setError(response?.data?.errors);
-      });
+  async function login(credentials: User) {
+
+    try {
+      const { data } = await ApiService.post("auth/login", credentials);
+      setAuth(data.data);
+    } catch ({ response }) {
+      setError([response?.data?.message]);
+    }
   }
 
-  function logout() {
-    purgeAuth();
+  async function logout() {
+    try {
+      const { data } = await ApiService.post("auth/logout", {});
+      console.log(`Logged out. ${data}`);
+      purgeAuth();
+    } catch ({ response }) {
+      setError([response.data.message]);
+    }
+
   }
 
-  function register(credentials: User) {
-    return ApiService.post("register", credentials)
-      .then(({ data }) => {
-        setAuth(data);
-      })
-      .catch(({ response }) => {
-        setError(response.data.errors);
-      });
+  async function register(credentials: User) {
+    try {
+      const { data } = await ApiService.post("auth/register", credentials);
+      setAuth(data);
+    } catch ({ response }) {
+      setError([response.data.message]);
+    }
   }
 
-  function forgotPassword(email: string) {
-    return ApiService.post("forgot_password", email)
-      .then(() => {
-        setError({});
-      })
-      .catch(({ response }) => {
-        setError(response.data.errors);
-      });
+  async function forgotPassword(email: string) {
+    try {
+      await ApiService.post("forgot_password", email);
+      setError({});
+    } catch ({ response }) {
+      setError([response.data.message]);
+    }
   }
 
   function verifyAuth() {
     if (JwtService.getToken()) {
       ApiService.setHeader();
-      ApiService.post("verify_token", { api_token: JwtService.getToken() })
+      ApiService.post("auth/refresh-token", {
+        refreshToken: JwtService.getToken(),
+      })
         .then(({ data }) => {
-          setAuth(data);
+          setAuth(data.data);
         })
         .catch(({ response }) => {
-          setError(response.data.errors);
+          setError([response.data.message]);
           purgeAuth();
         });
     } else {

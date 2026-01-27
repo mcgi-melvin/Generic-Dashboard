@@ -17,8 +17,8 @@
       <router-link to="/dashboard">
         <img
           alt="Logo"
-          :src="getAssetPath('media/logos/demo3.svg')"
-          class="h-20px logo theme-light-show"
+          :src="getAssetPath('media/logos/digizan-logo.png')"
+          class="h-80px logo theme-light-show"
         />
         <img
           alt="Logo"
