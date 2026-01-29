@@ -8,6 +8,13 @@
       @submit="onSubmitRegister"
       id="kt_login_signup_form"
       :validation-schema="registration"
+      :initial-values="{
+        first_name: default_account.first_name,
+        last_name: default_account.last_name,
+        email: default_account.email,
+        password: default_account.pass,
+        password_confirmation: default_account.password_confirmation,
+      }"
     >
       <!--begin::Heading-->
       <div class="mb-10 text-center">
@@ -50,7 +57,9 @@
       <div class="row fv-row mb-7">
         <!--begin::Col-->
         <div class="col-xl-6">
-          <label class="form-label fw-bold text-gray-900 fs-6">First Name</label>
+          <label class="form-label fw-bold text-gray-900 fs-6"
+            >First Name</label
+          >
           <Field
             class="form-control form-control-lg form-control-solid"
             type="text"
@@ -109,7 +118,9 @@
         <!--begin::Wrapper-->
         <div class="mb-1">
           <!--begin::Label-->
-          <label class="form-label fw-bold text-gray-900 fs-6"> Password </label>
+          <label class="form-label fw-bold text-gray-900 fs-6">
+            Password
+          </label>
           <!--end::Label-->
 
           <!--begin::Input wrapper-->
@@ -236,6 +247,14 @@ export default defineComponent({
     ErrorMessage,
   },
   setup() {
+    const default_account = ref({
+      first_name: import.meta.env.VITE_APP_DEMO_FIRST_NAME,
+      last_name: import.meta.env.VITE_APP_DEMO_LAST_NAME,
+      email: import.meta.env.VITE_APP_DEMO_EMAIL,
+      pass: import.meta.env.VITE_APP_DEMO_PASS,
+      password_confirmation: import.meta.env.VITE_APP_DEMO_PASS,
+    });
+
     const store = useAuthStore();
     const router = useRouter();
 
@@ -290,9 +309,8 @@ export default defineComponent({
           router.push({ name: "sign-in" });
         });
       } else {
-        console.log( error )
         Swal.fire({
-          text: error[0] as string,
+          text: error as string,
           icon: "error",
           buttonsStyling: false,
           confirmButtonText: "Try again!",
@@ -309,6 +327,7 @@ export default defineComponent({
     };
 
     return {
+      default_account,
       registration,
       onSubmitRegister,
       submitButton,

@@ -8,7 +8,7 @@ const register = async (req, res) => {
         const { email, password, first_name, last_name, role_id = 3 } = req.body;
 
         const existingUser = await User.findByEmail(email);
-        if (existingUser) {
+        if (existingUser?.length) {
             return res.status(400).json({
                 success: false,
                 message: 'Email already registered'
@@ -52,7 +52,7 @@ const login = async (req, res) => {
         if (!user) {
             return res.status(401).json({
                 success: false,
-                message: 'Invalid credentials'
+                message: 'Account not registered'
             });
         }
 

@@ -1,27 +1,56 @@
+// config/database.js
 const { Pool } = require('pg');
-require('dotenv').config();
+const mysql = require('mysql2/promise');
 
-const pool = new Pool({
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    database: process.env.DB_NAME,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    max: 20,
-    idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 2000,
-});
+let pool;
 
-pool.on('connect', () => {
-    console.log('✓ Database connected successfully');
-});
+const initDatabase = async () => {
+    const dbType = process.env.DB_TYPE || 'postgres';
 
-pool.on('error', (err) => {
-    console.error('Unexpected database error:', err);
-    process.exit(-1);
-});
+    if (dbType === 'postgres') {
+        pool = new Pool({
+            host: process.env.PG_HOST,
+            port: process.env.PG_PORT,
+            user: process.env.PG_USER,
+            password: process.env.PG_PASSWORD,
+            database: process.env.PG_DATABASE,
+        });
+        console.log('Connected to PostgreSQL');
+    } else if (dbType === 'mysql') {
+        pool = mysql.createPool({
+            host: process.env.MYSQL_HOST,
+            port: process.env.MYSQL_PORT,
+            user: process.env.MYSQL_USER,
+            password: process.env.MYSQL_PASSWORD,
+            database: process.env.MYSQL_DATABASE,
+            waitForConnections: true,
+            connectionLimit: 10,
+            queueLimit: 0
+        });
+        console.log('Connected to MySQL');
+    } else {
+        throw new Error('Invalid DB_TYPE. Must be "postgres" or "mysql"');
+    }
+
+    return pool;
+};
+
+
+const query = async (text, params) => {
+    const dbType = process.env.DB_TYPE || 'postgres';
+
+    if (dbType === 'postgres') {
+        return await pool.query(text, params);
+    } else {
+        // Convert PostgreSQL-style $1, $2 to MySQL-style ?
+        const mysqlQuery = text.replace(/\$\d+/g, '?');
+        const [rows] = await pool.execute(mysqlQuery, params);
+        return {rows}
+    }
+};
 
 module.exports = {
-    query: (text, params) => pool.query(text, params),
+    initDatabase,
+    query,
     pool
 };

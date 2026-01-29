@@ -5,6 +5,7 @@ require('dotenv').config();
 
 const authRoutes = require('./api/route/authRoute');
 const userRoutes = require('./api/route/userRoute');
+const {initDatabase} = require("./config/db");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -49,14 +50,17 @@ app.use((err, req, res, next) => {
     });
 });
 
-app.listen(PORT, () => {
-    console.log(`
+async function start_server() {
+    await initDatabase()
+    app.listen(PORT, () => {
+        console.log(`
 ╔════════════════════════════════════════╗
 ║   Dashboard API Server Running         ║
 ║   Port: ${PORT}                           ║
 ║   Environment: ${process.env.NODE_ENV || 'development'}             ║
 ╚════════════════════════════════════════╝
   `);
-});
+    });
+}
 
-module.exports = app;
+start_server();

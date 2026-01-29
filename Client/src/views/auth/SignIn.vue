@@ -184,8 +184,8 @@ export default defineComponent({
   },
   setup() {
     const default_login = ref({
-      email: "admin@demo.com",
-      password: "Asdqwe123!@#",
+      email: import.meta.env.VITE_APP_DEMO_EMAIL,
+      password: import.meta.env.VITE_APP_DEMO_PASS,
     });
 
     const store = useAuthStore();

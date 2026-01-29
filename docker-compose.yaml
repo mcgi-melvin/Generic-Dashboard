@@ -51,19 +51,20 @@ services:
     depends_on:
       - db
   db:
-    image: postgres:18.1-alpine
+    image: mysql:latest
     container_name: generic-dashboard-db
-    restart: unless-stopped
+    restart: always
     ports:
-      - "5432:5432"
+      - "3307:3306"
     volumes:
       - ./Server/database/migrations:/docker-entrypoint-initdb.d
-      - postgres_data:/var/lib/postgresql/data
+      - mysql_data:/var/lib/mysql
     environment:
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=Asdqwe123
-      - POSTGRES_DB=generic_dashboard
+      - MYSQL_USER=generic_dashboard_user
+      - MYSQL_PASSWORD=Asdqwe123
+      - MYSQL_DATABASE=generic_dashboard
+      - MYSQL_ROOT_PASSWORD=Asdqwe123
     networks:
       - application
 volumes:
-  postgres_data:
+  mysql_data:
